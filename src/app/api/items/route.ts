@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool, { initDatabase } from '@/lib/database';
+import pool, { initDatabase } from 'lib/database';
 import { ItemCompra } from '@/types/item';
 
 // GET /api/items
