@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { ItemCompra, ItemCompraFormData } from '@/types/item'; 
+import { ItemCompra, ItemCompraFormData } from '@/types/item';
 
 // --- Configuración de la API ---
 const API_URL = '/api/items';
@@ -13,7 +13,7 @@ const MOCK_ITEMS: ItemCompra[] = [
 ];
 
 export const useShoppingList = () => {
-    const [items, setItems] = useState<ItemCompra[]>([]); 
+    const [items, setItems] = useState<ItemCompra[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -22,12 +22,12 @@ export const useShoppingList = () => {
     const loadItems = useCallback(async () => {
         setIsLoading(true);
         setError(null);
-        
-        const startTime = Date.now(); 
+
+        const startTime = Date.now();
 
         try {
             const response = await fetch(API_URL);
-            
+
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
@@ -67,7 +67,7 @@ export const useShoppingList = () => {
                 body: JSON.stringify({
                     nombre: itemData.nombre,
                     cantidad: itemData.cantidad,
-                    precio: itemData.precio 
+                    precio: itemData.precio
                 }),
             });
 
@@ -86,44 +86,40 @@ export const useShoppingList = () => {
 
     // Método PUT (Toggle 'Comprado')
     const handleToggleComprado = useCallback(async (id: number) => {
-        // Optimistic UI Update
-        setItems(prev => prev.map(item =>
-            item.id === id ? { ...item, comprado: !item.comprado } : item
-        ));
 
-        const currentItem = items.find(item => item.id === id);
-        if (!currentItem) return;
+        // Calcular el nuevo estado localmente para la UI
+        setItems(prevItems => {
+            return prevItems.map(item =>
+                // Invertir estado localmente para la respuesta inmediata
+                item.id === id ? { ...item, comprado: !item.comprado } : item
+            );
+        });
 
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ comprado: !currentItem.comprado }),
+            // Llamada a la API al nuevo endpoint /toggle
+            const response = await fetch(`${API_URL}/${id}/toggle`, {
+                method: 'POST', // Usar POST para el comando/acción
             });
 
             if (!response.ok) {
-                // Rollback si falla
-                setItems(prev => prev.map(item =>
-                    item.id === id ? { ...item, comprado: !item.comprado } : item
-                ));
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Fallo al actualizar el estado de compra.');
+                throw new Error('Fallo al actualizar el estado del ítem.');
             }
-            
+
         } catch (err) {
             console.error("Error al actualizar ítem:", err);
-            setError("No se pudo actualizar el estado del ítem.");
+            // Rollback: Si falla la API, revertimos cargando el estado real de la BD
+            loadItems();
         }
-    }, [items]);
+    }, [loadItems]);
 
 
     // Método DELETE (Eliminar Item)
     const handleDeleteItem = useCallback(async (id: number) => {
 
         if (!id || id <= 0) {
-        console.error("ID inválido recibido para eliminar.");
-        return; // Detener la ejecución
-    }
+            console.error("ID inválido recibido para eliminar.");
+            return; // Detener la ejecución
+        }
 
         // Elimina de la lista inmediatamente
         setItems(prev => prev.filter(item => item.id !== id));
@@ -153,7 +149,7 @@ export const useShoppingList = () => {
 
 
     // --- Lógica de Filtrado ---
-    const filteredItems = items.filter(item => 
+    const filteredItems = items.filter(item =>
         item.nombre.toLowerCase().includes(searchQuery.toLowerCase())
     );
 

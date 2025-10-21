@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool, { initDatabase } from '../../lib/database';
 import { ItemCompra } from '../../types/item';
-import { handleApiError } from '../utils/errorHandling'; 
+import { handleApiError } from '../utils/errorHandling';
 
 // GET /api/items
 /**
@@ -24,12 +24,12 @@ export async function GET() {
 export async function POST(request: NextRequest) {
     try {
         const { nombre, cantidad, precio = 0 }: Partial<ItemCompra> = await request.json();
-        
+
         // Validación de datos de entrada (Error de negocio: 400 Bad Request)
         if (!nombre || !cantidad) {
-            return NextResponse.json({ 
+            return NextResponse.json({
                 success: false,
-                error: 'Nombre y cantidad son requeridos' 
+                error: 'Nombre y cantidad son requeridos'
             }, { status: 400 });
         }
 
