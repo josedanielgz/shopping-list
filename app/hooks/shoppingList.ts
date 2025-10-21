@@ -66,7 +66,8 @@ export const useShoppingList = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     nombre: itemData.nombre,
-                    cantidad: itemData.cantidad 
+                    cantidad: itemData.cantidad,
+                    precio: itemData.precio 
                 }),
             });
 

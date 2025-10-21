@@ -23,7 +23,7 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
     try {
-        const { nombre, cantidad }: Partial<ItemCompra> = await request.json();
+        const { nombre, cantidad, precio = 0 }: Partial<ItemCompra> = await request.json();
         
         // Validación de datos de entrada (Error de negocio: 400 Bad Request)
         if (!nombre || !cantidad) {
@@ -33,15 +33,17 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
+        const itemPrecio = typeof precio === 'string' ? parseFloat(precio) : precio;
+
         const result = await pool.query(
-            'INSERT INTO items_compra (nombre, cantidad, comprado) VALUES ($1, $2, FALSE) RETURNING *',
-            [nombre, cantidad]
+            'INSERT INTO items_compra (nombre, cantidad, precio, comprado) VALUES ($1, $2, $3, FALSE) RETURNING *',
+            [nombre, cantidad, itemPrecio]
         );
 
         // 201 Created
         return NextResponse.json(result.rows[0], { status: 201 });
     } catch (error) {
-        // 🔄 Usar el manejador de errores encapsulado
+        // Usar el manejador de errores encapsulado
         return handleApiError(error, 'POST /api/items');
     }
 }

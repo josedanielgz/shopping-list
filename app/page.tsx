@@ -14,12 +14,13 @@ const ShoppingListPage: React.FC = () => {
     
     // Extraer todo el estado y handlers del hook
     const {
-        items,
-        searchQuery,
-        isLoading,
-        handleAddItem,
-        handleSearch,
-        handleToggleComprado,
+        items, 
+        isLoading, 
+        error,
+        searchQuery, 
+        handleAddItem, 
+        handleSearch, 
+        handleToggleComprado, 
         handleDeleteItem
     } = useShoppingList();
 
