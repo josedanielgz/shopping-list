@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool, { initDatabase } from 'lib/database';
+import pool, { initDatabase } from '@/lib/database';
 import { ItemCompra } from '@/types/item';
 
 // GET /api/items
@@ -9,10 +9,52 @@ export async function GET() {
     const result = await pool.query('SELECT * FROM items_compra ORDER BY creado_en DESC');
     return NextResponse.json(result.rows);
   } catch (error) {
-    return NextResponse.json({ error: 'Error fetching items' }, { status: 500 });
+    console.error('❌ Error en GET /api/items:', error);
+    
+    // Manejo específico de diferentes tipos de error
+    let errorMessage = 'Error fetching items';
+    let statusCode = 500;
+    let errorDetails = null;
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+      errorDetails = {
+        name: error.name,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      };
+
+      // Errores específicos de PostgreSQL
+      if ('code' in error) {
+        const pgError = error as any;
+        switch (pgError.code) {
+          case 'ECONNREFUSED':
+            errorMessage = 'No se puede conectar a la base de datos';
+            statusCode = 503;
+            break;
+          case '28P01':
+            errorMessage = 'Error de autenticación en la base de datos';
+            statusCode = 401;
+            break;
+          case '3D000':
+            errorMessage = 'La base de datos no existe';
+            statusCode = 500;
+            break;
+          case '42P01':
+            errorMessage = 'La tabla items_compra no existe';
+            statusCode = 500;
+            break;
+        }
+      }
+    }
+
+    return NextResponse.json({
+      success: false,
+      error: errorMessage,
+      details: process.env.NODE_ENV === 'development' ? errorDetails : undefined,
+      timestamp: new Date().toISOString()
+    }, { status: statusCode });
   }
 }
-
 // POST /api/items
 export async function POST(request: NextRequest) {
   try {
