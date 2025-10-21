@@ -42,14 +42,14 @@ const pool = new Pool({
 export async function initDatabase() {
   const client = await pool.connect();
   try {
-    await client.query(`
+    /*await client.query(`
       CREATE TABLE IF NOT EXISTS items_compra (
         id SERIAL PRIMARY KEY,
         nombre VARCHAR(255) NOT NULL,
         cantidad INTEGER NOT NULL,
         creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
-    `);
+    `);*/
     console.log('✅ Tabla items_compra inicializada');
   } finally {
     client.release();

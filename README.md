@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shopping List - Demo de Typescript con Express.js y Postgres
 
-## Getting Started
+## Dependencias
 
-First, run the development server:
+* Node.js 
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+~~~
+% node -v
+v25.0.0
+~~~
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* Docker CE
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+~~~
+% docker -v
+Docker version 28.5.1, build e180ab8
+~~~
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Instrucciones
 
-## Learn More
+* Clonar el repositorio en el sistema de archivos
 
-To learn more about Next.js, take a look at the following resources:
+~~~
+% git clone "https://github.com/josedanielgz/shopping-list.git"
+~~~
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* Instalar las dependencias del proyecto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+~~~
+% npm install
+~~~
 
-## Deploy on Vercel
+* Lanzar el contenedor 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+~~~
+% docker compose up -d
+[+] Running 2/2
+ ✔ Network shopping-list-frontend_default  Created                                                                             0.3s 
+ ✔ Container postgres_db                   Started                                           
+~~~
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* Acceder a la interfaz de línea de comandos del contenedor y crear un usuario para la gestión
+de la base de datos con los privilegios adecuados
+
+~~~
+% docker exec -it postgres_db psql -U postgres
+
+psql (18.0 (Debian 18.0-1.pgdg13+3))
+Type "help" for help.
+
+postgres=# CREATE USER shop_manager WITH PASSWORD "escribircontraseñaaqui";
+postgres=# GRANT ALL PRIVILEGES ON app_db TO shop_manager;
+postgres=# GRANT ALL PRIVILEGES ON app_db.public TO shop_manager;
+postgres=#\q
+~~~
+
+* Ejecutar el archivo semilla manualmente para llenar la base de datos con registros de prueba
+
+~~~
+% docker compose exec db psql -U postgres -d app_db -f /docker-entrypoint-initdb.d/seed.sql
+psql:/docker-entrypoint-initdb.d/seed.sql:2: NOTICE:  table "items_compra" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 10
+~~~
+
+* Crear un archivo .env en _la raíz del proyecto_ (justo junto a `compose.yaml` y los otros archivos de configuración) para administrar las credenciales de la base
+de datos
+
+~~~
+# Contenido del archivo de texto .env
+PG_USER=shop_manager
+PG_HOST=localhost
+PG_DATABASE=app_db
+PG_PASSWORD="lacontraseñaquehayaelegido"
+PG_PORT=5432
+PG_SCHEMA=public
+~~~
+
+* Ejecutar el servidor de Node.js
+
+~~~
+% npm run dev
+
+> shopping-list-frontend@0.1.0 dev
+~~~
+
+## TODO
+
+* Introducir la totalidad la apliación dentro de un contenedor
+* Utilziar permisos más granulares para el usuario de la BD
+* Implementar un mecanismo de backups
