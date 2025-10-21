@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool from '@/app/lib/database';
-import { handleApiError } from '@/app/api/utils/errorHandling'; 
-import { ItemCompra } from '@/app/types/item';
+import pool from '@/lib/database';
+import { handleApiError } from '@/api/utils/errorHandling'; 
+import { ItemCompra } from '@/types/item';
 
 // PUT /api/items/[id]
 
@@ -71,7 +71,11 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id);
+    const id = parseInt((await params).id, 10);
+
+if (isNaN(id) || id <= 0) {
+            return NextResponse.json({ error: 'ID de ítem inválido.' }, { status: 400 });
+        }
 
     const result = await pool.query(
       'DELETE FROM items_compra WHERE id = $1 RETURNING id',

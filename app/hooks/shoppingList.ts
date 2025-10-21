@@ -84,9 +84,7 @@ export const useShoppingList = () => {
         }
     }, []);
 
-    // --------------------------------------------------
-    // 3. Método PUT (Toggle 'Comprado')
-    // --------------------------------------------------
+    // Método PUT (Toggle 'Comprado')
     const handleToggleComprado = useCallback(async (id: number) => {
         // Optimistic UI Update
         setItems(prev => prev.map(item =>
@@ -118,11 +116,16 @@ export const useShoppingList = () => {
         }
     }, [items]);
 
-    // --------------------------------------------------
-    // 4. Método DELETE (Eliminar Item)
-    // --------------------------------------------------
+
+    // Método DELETE (Eliminar Item)
     const handleDeleteItem = useCallback(async (id: number) => {
-        // Optimistic UI Update: Elimina de la lista inmediatamente
+
+        if (!id || id <= 0) {
+        console.error("ID inválido recibido para eliminar.");
+        return; // Detener la ejecución
+    }
+
+        // Elimina de la lista inmediatamente
         setItems(prev => prev.filter(item => item.id !== id));
 
         try {
@@ -142,9 +145,8 @@ export const useShoppingList = () => {
         }
     }, [loadItems]);
 
-    // --------------------------------------------------
-    // 5. Método de Búsqueda (Agregado) 🚀
-    // --------------------------------------------------
+
+    // Método de Búsqueda (implementar en el futuro)
     const handleSearch = useCallback((query: string) => {
         setSearchQuery(query);
     }, []);
