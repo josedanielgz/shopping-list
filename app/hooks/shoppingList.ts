@@ -18,9 +18,7 @@ export const useShoppingList = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // --------------------------------------------------
-    // 1. Método GET (Cargar Items)
-    // --------------------------------------------------
+    // Método GET (Cargar Items)
     const loadItems = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -60,9 +58,7 @@ export const useShoppingList = () => {
     }, [loadItems]);
 
 
-    // --------------------------------------------------
-    // 2. Método POST (Añadir Item)
-    // --------------------------------------------------
+    // Método POST (Añadir Item)
     const handleAddItem = useCallback(async (itemData: ItemCompraFormData) => {
         try {
             const response = await fetch(API_URL, {
@@ -164,9 +160,9 @@ export const useShoppingList = () => {
         isLoading,
         error,
         handleAddItem,
-        handleSearch, // Exportado
-        handleToggleComprado, // Exportado
-        handleDeleteItem,    // Exportado
-        loadItems,           // Exportado
+        handleSearch,
+        handleToggleComprado,
+        handleDeleteItem,
+        loadItems,
     };
 };
