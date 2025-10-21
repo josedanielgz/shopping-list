@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { ItemCompra, ItemCompraFormData } from '@/types/item';
 
+// hook auxiliar para el control de eventos d ela lista de compras
 // --- Configuración de la API ---
 const API_URL = '/api/items';
 const MIN_LOAD_TIME_MS = 300; // Simular tiempo de carga mínimo

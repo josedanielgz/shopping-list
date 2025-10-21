@@ -7,6 +7,8 @@ interface ItemCardProps {
   onDeleteItem: (id: number) => void;
 }
 
+// Componente auxiliar para la gestión de precios de los items
+
 const ItemCard: React.FC<ItemCardProps> = ({ 
   item, 
   onToggleComprado, 

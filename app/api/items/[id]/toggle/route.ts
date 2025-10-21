@@ -19,7 +19,7 @@ export async function POST(
             return NextResponse.json({ error: 'ID de ítem inválido.' }, { status: 400 });
         }
 
-        // 💡 CONSULTA SQL: Invertir el estado comprado
+        // Consulta SQL para Invertir el estado comprado
         const result = await pool.query(
             'UPDATE items_compra SET comprado = NOT comprado WHERE id = $1 RETURNING *',
             [id]
