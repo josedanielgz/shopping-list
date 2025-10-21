@@ -1,10 +1,7 @@
-// ./src/app/components/ui/ItemList.tsx
-
 "use client"
 import React from 'react';
 import { ItemCompra } from '@/types/item';
-// 💡 IMPORTACIÓN: Importamos el nuevo componente
-import ItemCard from './ItemCard'; 
+import ItemCard from '@/components/ItemCard'; 
 
 interface ItemListProps {
   items: ItemCompra[];

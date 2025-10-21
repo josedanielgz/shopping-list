@@ -1,11 +1,16 @@
-// ./src/hooks/useShoppingList.ts
-
 import { useState, useCallback, useEffect } from 'react';
 import { ItemCompra, ItemCompraFormData } from '@/types/item'; 
 
 // --- Configuración de la API ---
 const API_URL = '/api/items';
 const MIN_LOAD_TIME_MS = 300; // Simular tiempo de carga mínimo
+
+// Conservar para propósitos de prueba
+const MOCK_ITEMS: ItemCompra[] = [
+    { id: 1, nombre: 'Leche', cantidad: 2, precio: 2.50, comprado: false, creado_en: new Date() },
+    { id: 2, nombre: 'Pan', cantidad: 1, precio: 1.80, comprado: true, creado_en: new Date() },
+    { id: 3, nombre: 'Arroz', cantidad: 3, precio: 3.20, comprado: false, creado_en: new Date() }
+];
 
 export const useShoppingList = () => {
     const [items, setItems] = useState<ItemCompra[]>([]); 

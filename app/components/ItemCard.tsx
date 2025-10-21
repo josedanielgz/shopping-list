@@ -1,5 +1,3 @@
-// ./src/app/components/ui/ItemCard.tsx
-
 import React from 'react';
 import { ItemCompra } from '@/types/item';
 
@@ -15,7 +13,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
   onDeleteItem 
 }) => {
   
-  // Convertimos el precio de string (PostgreSQL) a número aquí, en el scope local.
+  // Convertir el precio de string (PostgreSQL) a número aquí, en el scope local.
   const itemPrice = parseFloat(item.precio as unknown as string);
   const itemTotal = itemPrice * item.cantidad;
 
