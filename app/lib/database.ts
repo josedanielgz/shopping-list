@@ -50,7 +50,7 @@ export async function initDatabase() {
         creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);*/
-    console.log('✅ Tabla items_compra inicializada');
+    console.log('Tabla items_compra inicializada');
   } finally {
     client.release();
   }

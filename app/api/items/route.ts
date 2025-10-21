@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool, { initDatabase } from '@/lib/database';
-import { ItemCompra } from '@/types/item';
-import { handleApiError } from '@/api/utils/errorHandling'; 
+import pool, { initDatabase } from '../../lib/database';
+import { ItemCompra } from '../../types/item';
+import { handleApiError } from '../utils/errorHandling'; 
 
 // GET /api/items
 /**

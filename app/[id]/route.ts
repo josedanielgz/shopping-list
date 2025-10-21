@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool from '@/lib/database';
-import { handleApiError } from '@/api/utils/errorHandling'; 
-import { ItemCompra } from '@/types/item';
+import pool from '@/app/lib/database';
+import { handleApiError } from '@/app/api/utils/errorHandling'; 
+import { ItemCompra } from '@/app/types/item';
 
 // PUT /api/items/[id]
 

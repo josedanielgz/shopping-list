@@ -1,6 +1,10 @@
+// ./src/app/components/ui/ItemList.tsx
+
 "use client"
 import React from 'react';
 import { ItemCompra } from '@/types/item';
+// 💡 IMPORTACIÓN: Importamos el nuevo componente
+import ItemCard from './ItemCard'; 
 
 interface ItemListProps {
   items: ItemCompra[];
@@ -15,6 +19,7 @@ const ItemList: React.FC<ItemListProps> = ({
   onToggleComprado, 
   onDeleteItem 
 }) => {
+  
   const filteredItems = items.filter(item =>
     item.nombre.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -22,8 +27,9 @@ const ItemList: React.FC<ItemListProps> = ({
   const itemsComprados = filteredItems.filter(item => item.comprado);
   const itemsPendientes = filteredItems.filter(item => !item.comprado);
 
-  const totalPendientes = itemsPendientes.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-  const totalComprados = itemsComprados.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+  // Conversión del precio para los cálculos totales
+  const totalPendientes = itemsPendientes.reduce((sum, item) => sum + (parseFloat(item.precio as unknown as string) * item.cantidad), 0);
+  const totalComprados = itemsComprados.reduce((sum, item) => sum + (parseFloat(item.precio as unknown as string) * item.cantidad), 0);
 
   if (filteredItems.length === 0) {
     return (
@@ -42,61 +48,9 @@ const ItemList: React.FC<ItemListProps> = ({
     );
   }
 
-  const ItemCard = ({ item }: { item: ItemCompra }) => (
-    <div className={`bg-white rounded-lg shadow-md border-l-4 ${
-      item.comprado 
-        ? 'border-green-500 bg-green-50' 
-        : 'border-orange-500'
-    }`}>
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-3">
-          <div className="flex-1">
-            <h3 className={`text-lg font-semibold ${
-              item.comprado ? 'line-through text-gray-500' : 'text-gray-800'
-            }`}>
-              {item.nombre}
-            </h3>
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-              <span>Cantidad: {item.cantidad}</span>
-              <span>Precio: ${item.precio.toFixed(2)}</span>
-              <span className="font-semibold">
-                Total: ${(item.precio * item.cantidad).toFixed(2)}
-              </span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => item.id && onToggleComprado(item.id)}
-              className={`px-3 py-1 rounded text-sm ${
-                item.comprado
-                  ? 'bg-gray-500 hover:bg-gray-600 text-white'
-                  : 'bg-green-500 hover:bg-green-600 text-white'
-              }`}
-            >
-              {item.comprado ? '↶' : '✓'}
-            </button>
-            <button
-              onClick={() => item.id && onDeleteItem(item.id)}
-              className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-sm"
-            >
-              ×
-            </button>
-          </div>
-        </div>
-
-        {item.creado_en && (
-          <p className="text-xs text-gray-400">
-            Agregado: {new Date(item.creado_en).toLocaleDateString()}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="space-y-6">
-      {/* Resumen */}
+      {/* Resumen (Permanece igual) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow border">
           <div className="text-sm text-gray-600">Total Items</div>
@@ -125,7 +79,12 @@ const ItemList: React.FC<ItemListProps> = ({
           </h3>
           <div className="grid gap-3">
             {itemsPendientes.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard 
+                key={item.id} 
+                item={item} 
+                onToggleComprado={onToggleComprado} 
+                onDeleteItem={onDeleteItem} 
+              />
             ))}
           </div>
         </div>
@@ -140,7 +99,12 @@ const ItemList: React.FC<ItemListProps> = ({
           </h3>
           <div className="grid gap-3 opacity-75">
             {itemsComprados.map((item) => (
-              <ItemCard key={item.id} item={item} />
+              <ItemCard 
+                key={item.id} 
+                item={item} 
+                onToggleComprado={onToggleComprado} 
+                onDeleteItem={onDeleteItem} 
+              />
             ))}
           </div>
         </div>

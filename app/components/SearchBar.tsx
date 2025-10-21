@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import { ItemCompraFormData } from '@/types/item';
+import { ItemCompraFormData } from '../types/item';
 
 interface SearchBarProps {
   onAddItem: (item: ItemCompraFormData) => void;

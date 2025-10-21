@@ -49,8 +49,8 @@ psql (18.0 (Debian 18.0-1.pgdg13+3))
 Type "help" for help.
 
 postgres=# CREATE USER shop_manager WITH PASSWORD "escribircontraseñaaqui";
-postgres=# GRANT ALL PRIVILEGES ON app_db TO shop_manager;
-postgres=# GRANT ALL PRIVILEGES ON app_db.public TO shop_manager;
+postgres=# GRANT ALL PRIVILEGES ON TABLE items_compra TO shop_manager;
+postgres=# GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shop_manager;
 postgres=#\q
 ~~~
 
@@ -85,8 +85,19 @@ PG_SCHEMA=public
 > shopping-list-frontend@0.1.0 dev
 ~~~
 
+* Opcional: algunos atajos de gestión para inspeccionar el estado de la base de datos estando conectado mediante plsql:
+
+~~~
+\l                    -- Ver todas las BD
+\c app_db             -- Cambiar a tu BD
+\dn                   -- Ver esquemas en app_db
+\dt                   -- Ver tablas en schema actual
+\dt public.*          -- Ver tablas específicamente en public
+SELECT * FROM information_schema.tables WHERE table_schema = 'public';
+~~~
+
 ## TODO
 
 * Introducir la totalidad la apliación dentro de un contenedor
-* Utilziar permisos más granulares para el usuario de la BD
+* Utilizar permisos más granulares para el usuario de la BD
 * Implementar un mecanismo de backups

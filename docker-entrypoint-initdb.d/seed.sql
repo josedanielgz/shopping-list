@@ -24,3 +24,6 @@ INSERT INTO items_compra (nombre, cantidad, precio, comprado) VALUES
 ('Pasta de dientes', 1, 5.00, TRUE),          -- Ya comprado
 ('Café molido (250g)', 1, 8.50, FALSE),
 ('Aguacates (unidad)', 4, 1.25, FALSE);
+
+GRANT ALL PRIVILEGES ON TABLE items_compra TO shop_manager;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shop_manager;
