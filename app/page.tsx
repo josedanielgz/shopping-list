@@ -7,6 +7,7 @@ import SearchBar from './components/SearchBar';
 import ItemList from './components/ItemList';
 import { useShoppingList } from './hooks/shoppingList'; 
 import { ItemCompraFormData } from './types/item';
+import "./globals.css";
 
 console.log("Valor de Header importado:", Header);
 
