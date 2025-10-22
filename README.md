@@ -50,6 +50,7 @@ Type "help" for help.
 
 postgres=# CREATE USER shop_manager WITH PASSWORD "escribircontraseñaaqui";
 postgres=# GRANT ALL PRIVILEGES ON TABLE items_compra TO shop_manager;
+postgres=#\c app_db # Opcional, a veces puede confundirse con la base de datos por defecto "postgres"
 postgres=# GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO shop_manager;
 postgres=#\q
 ~~~
@@ -95,6 +96,20 @@ PG_SCHEMA=public
 \dt public.*          -- Ver tablas específicamente en public
 SELECT * FROM information_schema.tables WHERE table_schema = 'public';
 ~~~
+
+## Estructura general del proyecto
+
+En construcción
+
+* `app/api/items`: Capa de backend. Contiene las rutas API (route.ts) para la lógica CRUD (GET, POST, PUT, DELETE) y el manejo de la base de datos.
+
+* `app/lib`: Almacena el cliente de conexión a PostgreSQL (database.ts).
+app/hooks,Lógica Frontend: Contiene el custom hook useShoppingList.ts que centraliza la lógica de estado y llamadas HTTP.
+* `app/components`: Componentes reutilizables (Modales, Header, Listas)."
+
+* `app/layout.tsx:`: Define el Header, Footer y aplica los estilos globales."
+
+* `public`: "Archivos estáticos (favicon, imágenes)."
 
 ## TODO
 
